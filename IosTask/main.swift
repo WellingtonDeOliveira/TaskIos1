@@ -114,8 +114,11 @@ func menuopcoes ()->Void{
         menuopcoes()
     case "5":
         print("Mudar Topico da Atividade")
+        print("------------------------------------------------------------------------------")
         for (index, tasks) in task.enumerated() {
-            print("Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic)")
+            
+            print("+ Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic) +")
+            print("------------------------------------------------------------------------------")
         }
         let valorEscolhidoS: String = readLine() ?? "0"
         
@@ -228,8 +231,8 @@ func editar() -> Void {
 }
 
 func remover() -> Void {
+    print("------------------------------------------------------------------------------")
     for (index, tasks) in task.enumerated() {
-        print("------------------------------------------------------------------------------")
         print("+ Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic) +")
         print("------------------------------------------------------------------------------")
     }
