@@ -19,16 +19,23 @@ public struct Task: Codable{
 func menuInit() -> String {
     print("""
     GERENCIADOR DE ATIVIDADES🗓️
-           _*MENU*_
-    1- LISTAR ATIVIDADES
-    2- ADICIONAR ATIVIDADES
-    3- REMOVER ATIVIDADES
-    4- EDITAR ATIVIDADES
-    5- PESQUISAR ATIVIDADES
-    6- MARCAR COMO CONCLUÍDA
-    7- ENCERRAR A APLICAÇÃO
+    ==========================
+    +         _*MENU*_        +
+    ---------------------------
+    | 1- LISTAR ATIVIDADES     |
+    ---------------------------
+    | 2- ADICIONAR ATIVIDADES  |
+    ---------------------------
+    | 3- REMOVER ATIVIDADES    |
+    ---------------------------
+    | 4- EDITAR ATIVIDADES     |
+    ---------------------------
+    | 5- MUDAR TOPICO DA ATIV. |
+    ---------------------------
+    | 6- ENCERRAR A APLICAÇÃO  |
+    ---------------------------
 
-    _*DIGITE A OPÇÅO DESEJADA*_
+    *DIGITE A OPÇÅO DESEJADA :
     
     """)
     let menu: String =  readLine() ?? "0"
@@ -55,20 +62,21 @@ let decoder = JSONDecoder()
 var task = adquirirDados()
 
 func escoTopic() -> String{
-    print("\nEscolha um dos topicos abaixo:\n[a]. A fazer\n[b]. Fazendo\n[c]. Feito")
+    print("\nEscolha um dos topicos abaixo:\n[a]. A fazer\n[b]. Fazendo\n[c]. Feito\n")
+    print("*DIGITE A OPÇÅO DESEJADA :")
     let topicRamdon = readLine() ?? "d"
     switch topicRamdon {
     case "a":
-        print("Topico escolhido: A fazer")
+        print("\nTopico escolhido: A fazer\n")
         return "A fazer"
     case "b":
-        print("Topico escolhido: Fazendo")
+        print("\nTopico escolhido: Fazendo\n")
         return "Fazendo"
     case "c":
-        print("Topico escolhido: Feito")
+        print("\nTopico escolhido: Feito\n")
         return "Feito"
     default:
-        print("Digite um valor valido")
+        print("\nDigite um valor valido\n")
         return escoTopic()
     }
 }
@@ -79,22 +87,30 @@ func menuopcoes ()->Void{
     case "1":
         print("Listar Atividade\n")
         listar()
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     case "2":
-        print("Adiconar atividade \nDigite o valor do título:")
+        print("\nAdiconar atividade \n\nDigite o valor do título:")
         let title = readLine() ?? ""
         var topic = escoTopic()
         print("\nDigite uma descrição:")
         let descript =  readLine() ?? ""
         salvar(title: title, topic: topic, descript: descript)
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     case "3":
         print("Remover Atividade")
         remover()
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     case "4":
         print("Editar Atividade")
         editar()
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     case "5":
         print("Mudar Topico da Atividade")
@@ -108,19 +124,27 @@ func menuopcoes ()->Void{
         var newTopic = escoTopic()
         salvar(title: task[valorEscolhido!].title, topic: newTopic, descript: task[valorEscolhido!].descript)
         task.remove(at: valorEscolhido!)
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     case "6":
         print("Encerrando...")
         break
     default:
-        print("Retornar o Menu")
+        print("Opção Invalida")
+        print("Pressione Enter para continuar")
+        _ = readLine()
         menuopcoes()
     }
 }
 
 func listar() -> Void {
+    print("------------------------------------------------------------------------------")
     for tasks in task {
-        print("Title: \(tasks.title) | Topic: \(tasks.topic) | Descrição: \(tasks.descript)")
+        print("""
+                + Title: \(tasks.title) | Topic: \(tasks.topic) | Descrição: \(tasks.descript) +
+                ------------------------------------------------------------------------------
+                """)
     }
     print("\n")
 }
@@ -153,7 +177,9 @@ func salvar(title: String, topic: String, descript: String) -> Void{
         encoder.outputFormatting = .prettyPrinted // Opcional: formatação para legibilidade
             let jsonData = try encoder.encode(task)
             FileManager.default.createFile(atPath: fileURL.path, contents: jsonData, attributes: nil)
-            print("\n\nTitle: \(title) | Topic: \(topic) | Descrição: \(descript)\n")
+        print("------------------------------------------------------------------------------")
+            print("+ Title: \(title) | Topic: \(topic) | Descrição: \(descript) +")
+        print("------------------------------------------------------------------------------")
     } catch {
         print("Erro ao codificar o objeto para JSON: \(error.localizedDescription)")
     }
@@ -161,13 +187,16 @@ func salvar(title: String, topic: String, descript: String) -> Void{
 
 func editar() -> Void {
     for (index, tasks) in task.enumerated() {
-        print("Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic)")
+        print("------------------------------------------------------------------------------")
+        print("+ Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic) +")
+        print("------------------------------------------------------------------------------")
     }
     let valorEscolhidoS: String = readLine() ?? "0"
     
     let valorEscolhido = Int(valorEscolhidoS)
     print("Título: \(task[valorEscolhido!].title) | Topico: \(task[valorEscolhido!].topic) | Descrição: \(task[valorEscolhido!].descript)\n\n")
-    print("Qual campo abaixo você deseja alterar?\n\n[a]. Título\n[b]. Topico\n[c]. Descrição")
+    print("Qual campo abaixo você deseja alterar?\n\n[a]. Título\n[b]. Topico\n[c]. Descrição\n")
+    print("*DIGITE A OPÇÅO DESEJADA :")
     
     let valorCampo: String = readLine() ?? "d"
     switch valorCampo {
@@ -200,7 +229,9 @@ func editar() -> Void {
 
 func remover() -> Void {
     for (index, tasks) in task.enumerated() {
-        print("Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic)")
+        print("------------------------------------------------------------------------------")
+        print("+ Índice: \(index) | Title: \(tasks.title) | Topic: \(tasks.topic) +")
+        print("------------------------------------------------------------------------------")
     }
     let valorEscolhidoS: String = readLine() ?? "0"
     
